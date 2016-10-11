@@ -5,7 +5,7 @@ function [ReTX_time,backoff_after,CSMA_sta,pl_t,ps_t,PL_colli,TX_time] = slotCSM
 %     2.rap_length: duration of RAP
 %     3.CSMA_sta: last CSMA state in pre superframe
 %     4.def_time_pre: backoff counter before superframe(-1: node has not obtained any slot before or just send packet successfully)
-%     5.last_CHN_sta: Channel state (0: idle,1:busy)
+%     5.last_CHN_sta: Channel state (0: BAD,1: GOOD)
 %     6.ReTX_times_pre: last retransmission times at the end of RAP
 %     7.CW: contention window of every node
 %     8.last_TX_time£º last time sending packet successfully
