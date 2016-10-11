@@ -160,7 +160,7 @@ for indE = 1:length(NL)%   多种优先级情况下
         PL_RAP_total(up,indE) = mean( sum( PL_RAP_sp(:,indUP) ) );      %总的RAP阶段发送的超帧数，取所有节点的平均数   
         PL_MAP_total(up,indE) = mean( sum( PL_MAP_sp(:,indUP) ) );
         EE_RAP_t(up,indE) = PS_RAP_total(up,indE) / ELE_RAP_t(up,indE);      %能量效率
-        EE_MAP_t(up,indE) = PS_MAP_total(up,indE) / ELE_MAP_t(up,indE);
+        EE_MAP_t(up, )
         
         Colli_t(up,indE) = mean( sum( Colli_RAP_sp(:,indUP) ) );  %总冲突数，取所有节点的平均数                
         Interval_avg(up,indE) = mean( Intv(indUP) );  %平均成功发包间隔 ,去各节点的平均数

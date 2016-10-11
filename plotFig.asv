@@ -5,5 +5,5 @@ grid;
 axis([2, 18, 0, 0.025]);
 title('energy efficiency of CSMA/CA and TDMA');
 xlabel('Number of nodes in WBAN');
-ylabel('energy efficiency');
+ylabel('successful transmission probability');
 legend('TDMA', 'CSMA/CA');
