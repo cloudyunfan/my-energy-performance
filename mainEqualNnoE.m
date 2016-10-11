@@ -19,12 +19,12 @@ CWmax = [64,32,32,16,16,8,8,4];
 
 %----------------------设置参数-----------------------------------------------------
 Tsim = 200; %NO. of superframes simulated
-Tslot = 1;  % slot length (ms)
+Tslot = 10;  % slot length (ms)
 Pkt_len = 512; %packet length, unit is bit
 Data_rate = 51.2; % transmission rate (kilo bits per second)
 % yf initialize energy
-E_th = 3;
-E_CCA = E_th;   %信道检测消耗的能量,发送、接受、侦听比例1:1:1%*******************************%
+E_th = 50;
+E_CCA = E_th / 10;   %信道检测消耗的能量,发送、接受、侦听比例1:1:1%*******************************%
 E_TX = E_th;       %发送数据包需要的能量
 
 TB = 200; %len_TDMA + len_RAP <=255
@@ -32,7 +32,8 @@ statelast = 10; %slot
 act = 2;
 %yf omit the MAP
 M = 25;   %MAP中询问的时隙块数 M = 7;
-T_block = 25;  %MAP中每一个块的时隙数
+T_block = 5;  %MAP中每一个块的时隙数
+ELE_MAP = T_block*E_TX;
 len_MAP = M*T_block;  %MAP的长度%*******************************%
 len_RAP = TB-len_MAP; %RAP阶段固定有100个时隙%*******************************%
 UPH = 6;
@@ -79,20 +80,22 @@ for indE = 1:length(NL)%   多种优先级情况下
     Colli_RAP_sp = zeros(Tsim,N);
     PS_RAP_sp = zeros(Tsim,N);   %成功传输的包数
     PS_MAP_sp = zeros(Tsim,N);
-    
+    ELE_RAP_sp = zeros(Tsim,N);%记录能耗
+    ELE_MAP_sp = zeros(Tsim,N);
+     
     Swait = waitbar(0,'仿真进度');   %设置进度条
     %last_TX_time_RAP = last_TX_time;
     for j = 1: Tsim
         %--------------------RAP阶段使用时隙CSMA/CA时隙分配方式,所有节点参与这个阶段------
         last_TX_time_RAP = last_TX_time-(j-1)*TB;
 %         tic
-        [ReTX_time_pre,Def_Time_Pre,CSMA_Sta_Pre,PL_RAP,PS_RAP,Colli_RAP,Succ_TX_time_RAP] = slotCSMACA_unsat_newnoE(len_RAP,CSMA_Sta_Pre,Def_Time_Pre,RAP_CHN_Sta,ReTX_time_pre,CW,last_TX_time_RAP,E_buff);%ELE_RAP,（倒数第四）,E_buff,E_flow（最后两个）等一下改 CW可以全局传过去
+        [ReTX_time_pre,Def_Time_Pre,CSMA_Sta_Pre,ELE_RAP,PL_RAP,PS_RAP,Colli_RAP,Succ_TX_time_RAP] = slotCSMACA_unsat_newnoE(len_RAP,CSMA_Sta_Pre,Def_Time_Pre,RAP_CHN_Sta,ReTX_time_pre,CW,last_TX_time_RAP,E_buff);%,（倒数第四）,E_buff,E_flow（最后两个）等一下改 CW可以全局传过去
 %         toc
         
         PL_RAP_sp(j,:) = PL_RAP;
         PS_RAP_sp(j,:) = PS_RAP;
         Colli_RAP_sp(j,:) = Colli_RAP;
-        %ELE_RAP_sp(j,:) = ELE_RAP;
+        ELE_RAP_sp(j,:) = ELE_RAP;
         for n=1:N
             %更新最近一次成功发包的时间
             if( ~isempty(Succ_TX_time_RAP{n}) )
@@ -125,7 +128,7 @@ for indE = 1:length(NL)%   多种优先级情况下
             end
            %---------------------更新统计变量------------------------
             TDMA_sift = TDMA_sift + T_block; %根据每个节点分配到的时隙数增加偏移量                    
-            %ELE_MAP_sp(j,ind_node_poll) = ELE_MAP_sp(j,ind_node_poll) + ELE_MAP;  %消耗的能量增加 
+            ELE_MAP_sp(j,ind_node_poll) = ELE_MAP_sp(j,ind_node_poll) + ELE_MAP;  %消耗的能量增加 
             PL_MAP_sp(j,ind_node_poll) = PL_td;
             PS_MAP_sp(j,ind_node_poll) = PS_td;                                              
          end 
@@ -150,7 +153,8 @@ for indE = 1:length(NL)%   多种优先级情况下
         indUP = find(UPnode==UPclass(up));
         
         %EH_total(up,indE) = mean( sum( EH_sp(:,indUP) ) );  %总采集到的能量      
-        %ELE_RAP_t(up,indE) = mean( sum( ELE_RAP_sp(:,indUP) ) );
+        ELE_RAP_t(up,indE) = mean( sum( ELE_RAP_sp(:,indUP) ) );
+        ELE_MAP_t(up,indE) = mean( sum( ELE_MAP_sp(:,indUP) ) );
         PS_RAP_total(up,indE) = mean( sum( PS_RAP_sp(:,indUP) ) );      %总的RAP阶段发送的超帧数，取所有节点的平均数   
         PS_MAP_total(up,indE) = mean( sum( PS_MAP_sp(:,indUP) ) );
         PL_RAP_total(up,indE) = mean( sum( PL_RAP_sp(:,indUP) ) );      %总的RAP阶段发送的超帧数，取所有节点的平均数   

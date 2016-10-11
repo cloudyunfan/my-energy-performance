@@ -1,4 +1,4 @@
-function [ReTX_time,backoff_after,CSMA_sta,pl_t,ps_t,PL_colli,TX_time] = slotCSMACA_unsat_newnoE(rap_length,CSMA_sta,def_time_pre,last_CHN_sta,ReTX_times_pre,CW,last_TX_time,E_buff) %act,,B_buff
+function [ReTX_time,backoff_after,CSMA_sta,ELE_ex,pl_t,ps_t,PL_colli,TX_time] = slotCSMACA_unsat_newnoE(rap_length,CSMA_sta,def_time_pre,last_CHN_sta,ReTX_times_pre,CW,last_TX_time,E_buff) %act,,B_buff
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ELE_ex(倒数第四),E_buff,E_flow（最后两个）
 %%% CSMA/CA transmission under unsaturation condition
 % Input:
@@ -186,8 +186,8 @@ while ( t<=rap_length )
 %         disp('Collision!')
         PL_colli(ind_TX) = PL_colli(ind_TX) + 1;         %冲突次数加1
         ReTX_time(ind_TX) = ReTX_time(ind_TX) + 1;       %重传次数加1 
-   %     ELE_ex(ind_TX) = ELE_ex(ind_TX) + E_TX;%消耗的能量累积记下
-   %     E_buff(ind_TX) = E_buff(ind_TX) - E_TX; %消耗掉能量
+        ELE_ex(ind_TX) = ELE_ex(ind_TX) + E_TX;%消耗的能量累积记下
+        E_buff(ind_TX) = E_buff(ind_TX) - E_TX; %消耗掉能量
         %%-----------------修改竞争窗口----------------------------------
         for n=1:length(ind_TX)
             n1 = ind_TX(n);
@@ -220,8 +220,8 @@ while ( t<=rap_length )
 %                 TX_time{ind_TX} = [TX_time{ind_TX},last_TX_time(ind_TX)];
                 TX_time_rap(last_TX_time(ind_TX),ind_TX) = 1;
             end
-           % ELE_ex(ind_TX) = ELE_ex(ind_TX) + E_TX;%消耗的能量累积记下 
-           % E_buff(ind_TX) = E_buff(ind_TX) - E_TX; %消耗掉能量           
+            ELE_ex(ind_TX) = ELE_ex(ind_TX) + E_TX; %消耗的能量累积记下 
+            E_buff(ind_TX) = E_buff(ind_TX) - E_TX; %消耗掉能量           
              %yf
              pl_t(ind_TX) = pl_t(ind_TX) + PL_cap;  %在pktsend阶段因为信道条件原因丢包了也算进来
              ps_t(ind_TX) = ps_t(ind_TX) + PS_cap; 
