@@ -29,7 +29,7 @@ function [ReTX_time,backoff_after,CSMA_sta,ELE_ex,pl_t,ps_t,PL_colli,TX_time] = 
 % parameters initialization 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-global Data_rate Pkt_len Tslot Pbg Pgb CWmin CWmax UP UPnode E_TX E_CCA channelslot statelast%isMAP isRAP 
+global Data_rate Pkt_len Tslot Pbg Pgb CWmin CWmax UP UPnode E_TX E_CCA channelslot statelast %isMAP isRAP 
 %yf probability of arrive one unit energy in each slot
 global P1_x
 %-----------²ÎÊý---------------------------------------------------------

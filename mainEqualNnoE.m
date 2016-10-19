@@ -24,7 +24,7 @@ Pkt_len = 512; %packet length, unit is bit
 Data_rate = 51.2; % transmission rate (kilo bits per second)
 % yf initialize energy
 E_th = 50;
-E_CCA = E_th / 10;   %信道检测消耗的能量,发送、接受、侦听比例1:1:1%*******************************%
+E_CCA = E_th / 100;   %信道检测消耗的能量,发送、接受、侦听比例1:1:1%*******************************%
 E_TX = E_th;       %发送数据包需要的能量
 
 TB = 200; %len_TDMA + len_RAP <=255
@@ -59,12 +59,12 @@ for indE = 1:length(NL)%   多种优先级情况下
     end
 
     %-----信道模型使用马尔科夫链对信道状态建模，设置信道状态转移概率---------
-    Pbg = 0.4*ones(1,N);
-    Pgb = zeros(1,N);   %如此为理想信道条件，信道恒定为GOOD不变
-    channelslot = zeros(1, N);
+    Pbg = 0.1*ones(1,N);
+    Pgb = 0.5*ones(1,N);   %如此为理想信道条件，信道恒定为GOOD不变：
+    channelslot = zeros(1, N); % 节点的链路在某一状态的持续时间，不超过statelast
     %------------------初始化电池和数据缓存区----------------
     E_buff = (E_th)*ones(1,N); % 初始化各节点能量状态为0 yf改为够传的能量    
-     %----------------仿真变量-----------------------------
+    %----------------仿真变量-----------------------------
     RAP_CHN_Sta = ones(1,N); % initial channel assumed to be GOOD. temperal variable to record every INITIAL state in a superframe
     TDMA_CHN_Sta = ones(1,N);    % initial channel assumed to be GOOD
     last_TX_time = ones(1,N); 
@@ -191,4 +191,4 @@ for indE = 1:length(NL)%   多种优先级情况下
       disp(['indE NumUP: ',num2str([indE N])]) 
 end
 disp('saturation VaringN simulation done!')
-save('VarN_MAC(UP0-6,NH1-1-9)(P1_x0.9)(NL1-1-9)noCHnoE.mat');
+save('VarN_MAC(UP0-6,NH1-1-9)(P1_x0.9)(NL1-1-9)(Pbg0.1)(Pgb0.5)(E_CCA100)noE.mat');

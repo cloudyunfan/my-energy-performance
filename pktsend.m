@@ -24,7 +24,7 @@ CHN_sta = CHN_sta_ini; % CHN_sta is a temperal variable updating every loop
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % channel state is updating
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% the channel state before current transmission，使用马尔科夫链来计算当前信道状态
+% the channel state before current transmission，使用马尔科夫链来计算当前信道状态（信道状态持续时间为statelast）
 for c = 1:floor( (channelslt + CHNbefore_leng)/statelast )
         if CHN_sta == 1
             CHN_sta = randsrc(1,1,[0 1;Pd 1-Pd]); %%%%%% channel model
@@ -32,7 +32,7 @@ for c = 1:floor( (channelslt + CHNbefore_leng)/statelast )
             CHN_sta = randsrc(1,1,[0 1;1-Pu Pu]); %%%%%% using Markov chain
         end
 end
-channelslt = mod(channelslt + CHNbefore_leng, statelast);
+channelslt = mod(channelslt + CHNbefore_leng, statelast); % 信道状态取余，计算出本状态持续时间
 % transmitting  slotNO packets
 for d = 1:slotNO  % each node i transmit slotNO slots
         if floor( (channelslt + slotNO)/statelast ) > 0
